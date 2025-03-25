@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Ants Tweaks - Ultimate Edition</title>
+
+  <!-- Bootstrap 5 for modern UI -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+  </script>
+  
+  <!-- FontAwesome for sidebar icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      user-select: none; /* Prevent text selection during drag */
+    }
+    /* Hide pages until we choose which to show */
+    #loginSection, #restoreSection { display: none; }
+    
+    /* Make sure main app is visible by default */
+    #mainApp { 
+      display: block; 
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    .centered-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .nav-link.active {
+      background-color: #222 !important;
+    }
+    
+    /* Sidebar with resizable functionality */
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: #1e1e1e;
+      padding: 20px;
+      color: white;
+      overflow-y: auto;
+      z-index: 100;
+      min-width: 150px;
+      max-width: 400px;
+      box-sizing: border-box;
+      resize: none; /* Prevent default resize behavior */
+    }
+    
+    /* The resizer that appears at the right edge of the sidebar */
+    .resizer {
+      width: 8px;
+      height: 100vh;
+      background-color: #32CD32;
+      position: absolute;
+      right: 0;
+      top: 0;
+      cursor: col-resize;
+      opacity: 0.5;
+      z-index: 101; /* Above the sidebar */
+    }
+    
+    .resizer:hover, .resizer.active {
+      opacity: 1;
+      background-color: #32CD32;
+    }
+    
+    /* Prevent cursor change during drag */
+    body.resizing {
+      cursor: col-resize !important;
+    }
+    
+    .sidebar h1 {
+      color: #fff;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+    
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar li {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar li:hover {
+      background-color: #333;
+    }
+    
+    .sidebar li.active {
+      background-color: #444;
+    }
+    
+    .sidebar i {
+      margin-right: 10px;
+    }
+    
+    /* Main content styles */
+    .main-content {
+      margin-left: 260px;
+      padding: 20px;
+      min-height: 100vh;
+      transition: margin-left 0.2s ease; /* Smooth transition for resizing */
+    }
+    
+    /* Toggle switches */
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .toggle-label {
+      margin-left: 10px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    /* Admin output */
+    #adminOutput {
+      background: #2b2b2b;
+      color: #ccc;
+      width: 100%;
+    }
+    
+    /* Software list */
+    .soft-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .soft-list li {
+      margin: 4px 0;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container-fluid">
+
+  <!-- 1) LOGIN SECTION -->
+  <div id="loginSection" class="centered-container text-center">
+    <h2 class="mb-4">Ants Tweaks - Login</h2>
+
+    <div class="mb-2">
+      <input 
+        type="text"
+        id="loginUsername"
+        class="form-control w-25 mx-auto"
+        placeholder="Username"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="3-20 chars, no 'admin' substring"
+      />
+    </div>
+
+    <div class="mb-2">
+      <div class="input-group w-25 mx-auto">
+        <input 
+          type="password"
+          id="loginPassword"
+          class="form-control"
+          placeholder="Password"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          title="At least 8 chars, must have uppercase, lowercase, digit, symbol"
+        />
+        <button class="btn btn-outline-secondary" id="showPassBtn" type="button" 
+                onclick="toggleShowPassword('loginPassword')">Show</button>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <input 
+        type="text"
+        id="loginKey"
+        class="form-control w-25 mx-auto"
+        placeholder="License Key"
+      />
+    </div>
+
+    <div class="mb-3 form-check w-25 mx-auto text-start">
+      <input type="checkbox" class="form-check-input" id="saveLoginCheck">
+      <label class="form-check-label" for="saveLoginCheck">Remember me</label>
+    </div>
+
+    <button class="btn btn-primary mb-3" onclick="attemptLogin()">Login</button>
+  </div>
+
+
+  <!-- 2) RESTORE PROMPT -->
+  <div id="restoreSection" class="centered-container text-center">
+    <h2>Create a Restore Point?</h2>
+    <p>We recommend a restore point before applying tweaks.</p>
+    <button class="btn btn-success me-2" id="createRestoreBtn" onclick="createRestorePoint()">Yes</button>
+    <button class="btn btn-secondary" id="skipRestoreBtn" onclick="skipRestorePoint()">Skip</button>
+  </div>
+
+
+  <!-- 3) MAIN APP -->
+  <div id="mainApp">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+      <div class="resizer"></div>
+      <h1 class="app-title">Ants Tweaks</h1>
+      <ul>
+        <li data-section="dashboard" class="active" onclick="showPage('dashboardPage')"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+        <li data-section="fps" onclick="showPage('fpsTweaks')"><i class="fas fa-gamepad"></i> FPS</li>
+        <li data-section="net" onclick="showPage('netTweaks')"><i class="fas fa-network-wired"></i> Network</li>
+        <li data-section="visual" onclick="showPage('visualTweaks')"><i class="fas fa-eye"></i> Visual</li>
+        <li data-section="privacy" onclick="showPage('privacyTweaks')"><i class="fas fa-shield-alt"></i> Privacy</li>
+        <li data-section="misc" onclick="showPage('miscTweaks')"><i class="fas fa-ellipsis-h"></i> Misc</li>
+        <li data-section="power" onclick="showPage('powerTweaks')"><i class="fas fa-bolt"></i> Power Plan</li>
+        <li data-section="advanced" onclick="showPage('advancedTweaks')"><i class="fas fa-cogs"></i> Advanced</li>
+        <li data-section="benchmark" onclick="showPage('benchmarkPage')"><i class="fas fa-chart-line"></i> Benchmark</li>
+        <li data-section="software" onclick="showPage('softwarePage')"><i class="fas fa-download"></i> Software</li>
+        <li data-section="tweak-tools" onclick="showPage('tweakToolsPage')"><i class="fas fa-tools"></i> Tweak Tools</li>
+        <li data-section="config" onclick="showPage('configPage')"><i class="fas fa-cog"></i> Config</li>
+        <li data-section="admin" id="adminNavItem" style="display:none;" onclick="showPage('adminPage')"><i class="fas fa-user-shield"></i> Admin</li>
+      </ul>
+    </div>
+    
+    <!-- Main Content Sections -->
+    <div class="main-content">
+      <!-- 3.1) DASHBOARD -->
+      <div id="dashboardPage">
+        <h2>System Overview</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <p><strong>Processor:</strong> <span id="cpuName">...</span></p>
+            <p><strong>Graphics Card:</strong> <span id="gpuName">...</span></p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>CPU Usage:</strong> <span id="cpuUsage">0%</span></p>
+            <p><strong>Memory Usage:</strong> <span id="memUsage">0%</span></p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>OS:</strong> <span id="osInfo">...</span></p>
+          </div>
+        </div>
+        <button id="backupBtn" class="btn btn-primary me-2">Create Restore Point</button>
+        <button class="btn btn-primary benchmark-btn" data-url="https://www.userbenchmark.com/Software">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Run Performance Benchmark
+        </button>
+      </div>
+
+      <!-- 3.2) FPS/Performance Tweaks -->
+      <div id="fpsTweaks" style="display:none;">
+        <h2>FPS / Performance Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleGameMode"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Windows Game Mode</span>
+        </div>
+        <small>Stops Windows Game Mode for better stability (some say it helps FPS).</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleGameDVR"><span class="slider"></span></label>
+          <span class="toggle-label">Disable GameDVR</span>
+        </div>
+        <small>Prevents background DVR from impacting performance.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleFastStartup"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Fast Startup</span>
+        </div>
+        <small>May improve driver loading on boot, some say it helps stability.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_hpet"><span class="slider"></span></label>
+          <span class="toggle-label">Disable HPET & Dynamic Tick</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_optimize_scheduler"><span class="slider"></span></label>
+          <span class="toggle-label">Optimize Network & Scheduler (Low Latency)</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_input_delay"><span class="slider"></span></label>
+          <span class="toggle-label">Reduce Input Lag (Advanced)</span>
+        </div>
+        
+        <button class="btn btn-info mt-3" onclick="applyFpsTweaks()">Apply FPS Tweaks</button>
+      </div>
+
+      <!-- 3.3) Internet/Network Tweaks -->
+      <div id="netTweaks" style="display:none;">
+        <h2>Internet / Network Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleTCP"><span class="slider"></span></label>
+          <span class="toggle-label">TCP Optimizations</span>
+        </div>
+        <small>Adjusts registry for better throughput/latency.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDNSFlush"><span class="slider"></span></label>
+          <span class="toggle-label">Flush DNS on Boot</span>
+        </div>
+        <small>Clears DNS cache to reduce stale entries.</small>
+        
+        <button class="btn btn-info mt-3" onclick="applyNetTweaks()">Apply Network Tweaks</button>
+      </div>
+
+      <!-- 3.4) Visual Tweaks -->
+      <div id="visualTweaks" style="display:none;">
+        <h2>Visual Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleAnimations"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Animations</span>
+        </div>
+        <small>Remove unneeded Windows animations.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleTransparency"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Transparency</span>
+        </div>
+        <small>Removes transparency effects in the UI.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_transparency"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Transparency Effects</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_show_seconds_in_taskbar_clock"><span class="slider"></span></label>
+          <span class="toggle-label">Show Seconds in Taskbar Clock</span>
+        </div>
+        
+        <button class="btn btn-info mt-3" onclick="applyVisualTweaks()">Apply Visual Tweaks</button>
+      </div>
+
+      <!-- 3.5) Privacy Tweaks -->
+      <div id="privacyTweaks" style="display:none;">
+        <h2>Privacy Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleWinUpdate"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Windows Update</span>
+        </div>
+        <small>Prevents updates from auto-installing.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleSearchIndex"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Search Indexing</span>
+        </div>
+        <small>Stops indexing for improved performance or privacy.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleTelemetry"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Telemetry</span>
+        </div>
+        <small>Limits data sent to MS.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_no_telemetry"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Telemetry / Data Collection</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_edge_tracking"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Edge Tracking</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_app_tracking"><span class="slider"></span></label>
+          <span class="toggle-label">Disable App Tracking</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_web_search"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Web Search</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_win_defender"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Windows Defender</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_update_telemetry"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Update Telemetry</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_wi_fi_sense"><span class="slider"></span></label>
+          <span class="toggle-label">Disable WiFi Sense</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_win_error_reporting"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Windows Error Reporting</span>
+        </div>
+        
+        <button class="btn btn-info mt-3" onclick="applyPrivacyTweaks()">Apply Privacy Tweaks</button>
+      </div>
+
+      <!-- 3.6) Misc Tweaks -->
+      <div id="miscTweaks" style="display:none;">
+        <h2>Misc Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleRemoteAssist"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Remote Assistance</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleBackgroundApps"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Background Apps</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDebloat"><span class="slider"></span></label>
+          <span class="toggle-label">Debloat Windows</span>
+        </div>
+        <small>Removes unneeded Windows apps/files.</small>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_app_vulnerability"><span class="slider"></span></label>
+          <span class="toggle-label">Disable App Vulnerability Scanning</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_sys_restore"><span class="slider"></span></label>
+          <span class="toggle-label">Disable System Restore</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_disable_throttle"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Throttling</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_enable_fast_startup"><span class="slider"></span></label>
+          <span class="toggle-label">Enable Fast Startup</span>
+        </div>
+        
+        <button class="btn btn-info mt-3" onclick="applyMiscTweaks()">Apply Misc Tweaks</button>
+      </div>
+
+      <!-- 3.7) Power Tweaks -->
+      <div id="powerTweaks" style="display:none;">
+        <h2>Power Plan Settings</h2>
+        <p>Select your preferred power plan for performance or efficiency.</p>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_ultimate_performance"><span class="slider"></span></label>
+          <span class="toggle-label">Enable Ultimate Performance Plan</span>
+        </div>
+        
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggle_enable_cpu_performance"><span class="slider"></span></label>
+          <span class="toggle-label">Enable CPU Performance Mode</span>
+        </div>
+        
+        <select class="form-select w-25" id="powerPlanSelect">
+          <option value="">--Choose--</option>
+          <option value="balanced">Balanced</option>
+          <option value="highperf">High Performance</option>
+          <option value="ultimate">Ultimate Performance (if available)</option>
+        </select>
+        <button class="btn btn-info mt-3" onclick="applyPowerPlan()">Apply Power Plan</button>
+      </div>
+
+      <!-- 3.8) Benchmark Page -->
+      <div id="benchmarkPage" style="display:none;">
+        <h2>Benchmark</h2>
+        <p>Test your CPU/GPU performance before/after tweaks.</p>
+        <button class="btn btn-primary benchmark-btn" data-url="https://www.userbenchmark.com/Software">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Run Performance Benchmark
+        </button>
+        <p id="benchmarkResult" class="mt-2"></p>
+      </div>
+
+      <!-- 3.9) Software Page -->
+      <div id="softwarePage" style="display:none;">
+        <h2>Recommended Software</h2>
+        <p>Click to install:</p>
+        <ul class="soft-list">
+          <li><button class="btn btn-outline-light" onclick="installSoft('Malwarebytes')">Install Malwarebytes</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('ADWCleaner')">Install ADWCleaner</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('NVcleanstall')">Install NVCleanstall</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Nvidia Profile Inspector')">Install Nvidia Profile Inspector</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('WinRAR')">Install WinRAR</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('ParkControl')">Install ParkControl</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Process Lasso')">Install Process Lasso</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Google Chrome')">Install Google Chrome</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Steam')">Install Steam</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Epic Games')">Install Epic Games</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Nvidia App')">Install Nvidia App</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('AMD Software')">Install AMD Software</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('DDU Uninstaller')">Install DDU Uninstaller</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Battle.net')">Install Battle.net</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Discord')">Install Discord</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Roblox')">Install Roblox</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Ubisoft Connect')">Install Ubisoft Connect</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('GOG Galaxy')">Install GOG Galaxy</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Origin')">Install Origin</button></li>
+          <li><button class="btn btn-outline-light" onclick="installSoft('Wargaming.net')">Install Wargaming.net</button></li>
+        </ul>
+      </div>
+
+      <!-- Advanced Tweaks Section -->
+      <div id="advancedTweaks" style="display:none;">
+        <h2>Advanced Tweaks</h2>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDisableHibernation" data-tweak-id="disable-hibernation"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Hibernation</span>
+          <p class="desc">Disables system hibernation to free up disk space and prevent sleep issues</p>
+        </div>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDisableFastStartup" data-tweak-id="disable-fast-startup"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Fast Startup</span>
+          <p class="desc">Disables Windows Fast Startup for better system stability</p>
+        </div>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDisableSMT" data-tweak-id="disable-smt"><span class="slider"></span></label>
+          <span class="toggle-label">Disable SMT/Hyperthreading</span>
+          <p class="desc">Disables simultaneous multithreading for better gaming performance</p>
+        </div>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleOptimizeServices" data-tweak-id="optimize-services"><span class="slider"></span></label>
+          <span class="toggle-label">Optimize Windows Services</span>
+          <p class="desc">Optimizes Windows services for gaming performance</p>
+        </div>
+        <div class="toggle-item">
+          <label class="switch"><input type="checkbox" id="toggleDisableIndexing" data-tweak-id="disable-indexing"><span class="slider"></span></label>
+          <span class="toggle-label">Disable Windows Indexing</span>
+          <p class="desc">Disables Windows search indexing for better performance</p>
+        </div>
+      </div>
+      
+      <!-- Tweak Tools Section -->
+      <div id="tweakToolsPage" style="display:none;">
+        <h2>Tweak Tools</h2>
+        
+        <div class="card mb-4 bg-dark text-white">
+          <div class="card-header">
+            <h3 class="h5">Performance Benchmarks</h3>
+          </div>
+          <div class="card-body">
+            <p>Measure your system performance to see the impact of tweaks.</p>
+            <a href="https://www.userbenchmark.com/Software" target="_blank" rel="noopener noreferrer" class="btn btn-primary benchmark-btn">
+              <i class="bi bi-speedometer2 me-2"></i>
+              Run Performance Benchmark
+            </a>
+            <div id="benchmarkResults" class="mt-3" style="display:none;">
+              <h4>Benchmark Results</h4>
+              <div class="row">
+                <div class="col-md-4">
+                  <h5>CPU Score</h5>
+                  <div id="cpuScore">-</div>
+                </div>
+                <div class="col-md-4">
+                  <h5>Memory Score</h5>
+                  <div id="memoryScore">-</div>
+                </div>
+                <div class="col-md-4">
+                  <h5>GPU Score</h5>
+                  <div id="gpuScore">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mb-4 bg-dark text-white">
+          <div class="card-header">
+            <h3 class="h5">Configuration Management</h3>
+          </div>
+          <div class="card-body">
+            <p>Save your current tweaks configuration or load a previously saved one.</p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary" id="saveConfigToFile">Save Configuration</button>
+              <button class="btn btn-secondary" id="loadConfigFromFile">Load Configuration</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mb-4 bg-dark text-white">
+          <div class="card-header">
+            <h3 class="h5">External Tweak Tools</h3>
+          </div>
+          <div class="card-body">
+            <p>Open these external tweak tools in your browser:</p>
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/rahilpathan/Win10Boost" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Win10Boost</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/Batlez/Batlez-Tweaks" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Batlez Tweaks</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/SanGraphic/QuickBoost/releases" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">QuickBoost</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/swagkarna/Defeat-Defender-V1.2.0/blob/93823acffa270fa707970c0e0121190dbc3eae89/Defeat-Defender.bat" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Defeat Defender</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/simeononsecurity/Windows-Optimize-Harden-Debloat" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Windows Optimize Harden Debloat</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/teeotsa/windows-11-debloat" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Windows 11 Debloat</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/WuhDaFak/Internet-Speed-Tweak" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Internet Speed Tweak</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/semazurek/ET-Optimizer" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">ET Optimizer</a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="https://github.com/jeremybeaume/tools/blob/master/disable-defender.ps1" target="_blank" rel="noopener noreferrer" class="btn btn-outline-light w-100">Disable Defender Script</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Page -->
+      <div id="configPage" style="display:none;">
+        <h2>Configuration</h2>
+        <button class="btn btn-secondary mb-2" onclick="saveSettings()">Save Config</button>
+        <input type="file" id="configInput" />
+        <button class="btn btn-secondary mb-2" onclick="loadSettings()">Load Config</button>
+      </div>
+
+      <!-- 3.10) ADMIN PAGE -->
+      <div id="adminPage" style="display:none;">
+        <h2>Admin Panel</h2>
+        <p>Use the tools below to upload a tweak config file, view logs, or check license keys.</p>
+        <p>
+          <input type="file" id="configFile"/><br/>
+          <button id="pushBtn" class="btn btn-secondary">Push Config</button>
+          <button id="logsBtn" class="btn btn-secondary">View Logs</button>
+          <button id="keysBtn" class="btn btn-secondary" onclick="reloadKeys()">Check Keys</button>
+        </p>
+        <textarea id="adminOutput" rows="8" style="width:100%;"></textarea>
+        
+        <table class="table table-dark table-bordered" id="keysTable">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Type</th>
+              <th>Bound User</th>
+              <th>HWID</th>
+              <th>Activation Date</th>
+              <th>Expired?</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </div> <!-- /main-content -->
+  </div> <!-- /mainApp -->
+</div><!-- /container-fluid -->
+
+<script>
+  /***************************************************************
+   * 0) BOOTSTRAP TOOLTIPS INIT
+   ***************************************************************/
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Initialize sidebar active state
+    const sidebarItems = document.querySelectorAll('.sidebar li');
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', function() {
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // DIRECTLY SHOW MAIN APP - Skip login and restore 
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('restoreSection').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block'; // Show main app
+    
+    console.log('Main app display set to block');
+    
+    // Load settings and system info
+    loadSettings();
+    loadSystemInfo();
+    startUsageMonitoring();
+    
+    // IMPROVED SIDEBAR DRAGGING FUNCTIONALITY
+    const sidebar = document.getElementById('sidebar');
+    const resizer = document.querySelector('.resizer');
+    const mainContent = document.querySelector('.main-content');
+    
+    // Set initial width
+    sidebar.style.width = '250px';
+    mainContent.style.marginLeft = '260px';
+    
+    // Store initial position and width
+    let startX, startWidth;
+    
+    function initDrag(e) {
+      startX = e.clientX;
+      startWidth = parseInt(document.defaultView.getComputedStyle(sidebar).width, 10);
+      document.body.classList.add('resizing');
+      resizer.classList.add('active');
+      
+      // Prevent text selection and other unwanted behaviors during drag
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    function doDrag(e) {
+      if (!startX) return;
+      
+      const width = startWidth + e.clientX - startX;
+      
+      // Constrain width to min/max values
+      const newWidth = Math.max(150, Math.min(400, width));
+      
+      sidebar.style.width = `${newWidth}px`;
+      mainContent.style.marginLeft = `${newWidth + 10}px`;
+    }
+    
+    function stopDrag() {
+      document.body.classList.remove('resizing');
+      resizer.classList.remove('active');
+      startX = null;
+      startWidth = null;
+    }
+    
+    // Mouse events
+    resizer.addEventListener('mousedown', initDrag);
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', stopDrag);
+    
+    // Touch events for mobile support
+    resizer.addEventListener('touchstart', (e) => {
+      initDrag(e.touches[0]);
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+      doDrag(e.touches[0]);
+    });
+    
+    document.addEventListener('touchend', stopDrag);
+    
+    // Prevent unwanted behaviors during drag
+    document.addEventListener('selectstart', (e) => {
+      if (startX !== null) {
+        e.preventDefault();
+      }
+    });
+  });
+  
+  const si    = require('systeminformation');
+  const fs    = require('fs');
+  const path  = require('path');
+  const fetch = require('node-fetch');
+  const { exec } = require('child_process');
+  const os   = require('os');
+  const { ipcRenderer } = require('electron');
+
+  const ACCOUNTS_FILE = path.join(__dirname, 'accounts.json');
+  const KEYS_FILE     = path.join(__dirname, 'keys.json');
+  const DISCORD_WEBHOOK_URL = ""; // put your webhook here if you want logs
+
+  let isAdmin = false;
+  let HWID    = null;
+  let usageInterval;
+  si.system().then(sys => {
+    HWID = sys.uuid || sys.serial || "UnknownHWID";
+  });
+
+  // On load, try to load saved login (if user checked "Remember me")
+  loadSavedLogin();
+  
+  function attemptLogin() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const keyVal   = document.getElementById('loginKey').value;
+    
+    // Check if username, password, and key are valid
+    if (!username || !password || !keyVal) {
+      alert("Please fill out all fields.");
+      return;
+    }
+    
+    // Check if username is valid
+    if (!checkUsername(username)) {
+      alert("Invalid username (3-20 chars, no 'admin').");
+      return;
+    }
+    
+    // Check if password is valid
+    if (!checkPassword(password)) {
+      alert("Password must have uppercase, lowercase, digit, symbol, >=8 chars.");
+      return;
+    }
+    
+    // Check if key is valid
+    if (!checkKey(keyVal)) {
+      alert("Invalid license key.");
+      return;
+    }
+    
+    // Check if user exists
+    const user = getUser(username);
+    if (!user) {
+      alert("User not found.");
+      return;
+    }
+    
+    // Check if password matches
+    if (user.password !== password) {
+      alert("Incorrect password!");
+      return;
+    }
+    
+    // Check if key matches
+    if (user.key !== keyVal) {
+      alert("That key doesn't match your account record!");
+      return;
+    }
+    
+    // Login successful, show main app
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  }
+  
+  function checkUsername(username) {
+    return username.length >= 3 && username.length <= 20 && !username.includes('admin');
+  }
+  
+  function checkPassword(password) {
+    return password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[!@#$%^&*()_+\-=\]{};':"\\|,.<>?]/.test(password);
+  }
+  
+  function checkKey(key) {
+    return key.length === 16 && /^[a-zA-Z0-9]+$/.test(key);
+  }
+  
+  function getUser(username) {
+    const accounts = JSON.parse(fs.readFileSync(ACCOUNTS_FILE, 'utf8'));
+    return accounts.find(account => account.username === username);
+  }
+  
+  function loadSavedLogin() {
+    const savedLogin = localStorage.getItem('savedLogin');
+    if (savedLogin) {
+      const { username, password, key } = JSON.parse(savedLogin);
+      document.getElementById('loginUsername').value = username;
+      document.getElementById('loginPassword').value = password;
+      document.getElementById('loginKey').value = key;
+    }
+  }
+  
+  function loadSettings() {
+    const settings = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
+    // Load settings into UI
+  }
+  
+  function loadSystemInfo() {
+    si.system().then(sys => {
+      document.getElementById('cpuName').innerText = sys.cpu;
+      document.getElementById('gpuName').innerText = sys.graphics;
+      document.getElementById('osInfo').innerText = sys.os;
+    });
+  }
+  
+  function startUsageMonitoring() {
+    usageInterval = setInterval(() => {
+      si.currentLoad().then(load => {
+        document.getElementById('cpuUsage').innerText = `${load.currentLoad}%`;
+        document.getElementById('memUsage').innerText = `${load.active}%`;
+      });
+    }, 1000);
+  }
+  
+  function applyFpsTweaks() {
+    // Apply FPS tweaks
+  }
+  
+  function applyNetTweaks() {
+    // Apply network tweaks
+  }
+  
+  function applyVisualTweaks() {
+    // Apply visual tweaks
+  }
+  
+  function applyPrivacyTweaks() {
+    // Apply privacy tweaks
+  }
+  
+  function applyMiscTweaks() {
+    // Apply misc tweaks
+  }
+  
+  function applyPowerPlan() {
+    // Apply power plan
+  }
+  
+  function installSoft(software) {
+    // Install software
+  }
+  
+  function createRestorePoint() {
+    // Create restore point
+  }
+  
+  function skipRestorePoint() {
+    // Skip restore point
+  }
+  
+  function showPage(page) {
+    // Show page
+  }
+  
+  function reloadKeys() {
+    // Reload keys
+  }
+  
+  function saveSettings() {
+    // Save settings
+  }
+  
+  function loadSettings() {
+    // Load settings
+  }
+</script>
+</body>
+</html>

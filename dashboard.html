@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Windows Tweaker - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h1 class="app-title">Tweaker</h1>
+    <ul>
+      <li data-section="dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+      <li data-section="fps"><i class="fas fa-gamepad"></i> FPS</li>
+      <li data-section="visual"><i class="fas fa-eye"></i> Visual</li>
+      <li data-section="privacy"><i class="fas fa-shield-alt"></i> Privacy</li>
+      <li data-section="network"><i class="fas fa-network-wired"></i> Network</li>
+      <li data-section="power"><i class="fas fa-bolt"></i> Power</li>
+      <li data-section="advanced"><i class="fas fa-cogs"></i> Advanced</li>
+      <li data-section="ram"><i class="fas fa-memory"></i> RAM</li>
+      <li data-section="gaming"><i class="fas fa-gamepad"></i> Gaming</li>
+      <li data-section="misc"><i class="fas fa-ellipsis-h"></i> Misc</li>
+      <li data-section="recommended"><i class="fas fa-star"></i> Recommended</li>
+      <li data-section="software"><i class="fas fa-download"></i> Software</li>
+      <li data-section="tweak-tools"><i class="fas fa-tools"></i> Tweak Tools</li>
+      <li data-section="admin" id="adminNav" style="display:none;"><i class="fas fa-user-shield"></i> Admin</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <!-- CashApp Credit Section -->
+    <div id="cashapp-section" class="section">
+      <h2>Credits</h2>
+      <p>If you enjoy this tool and want to support further development, feel free to send contributions to:</p>
+      <p><b>CashApp:</b> <a href="https://cash.app/$kurrby67" target="_blank">kurrby67</a></p>
+    </div>
+    
+    <!-- Dashboard Section -->
+    <div id="section-dashboard" class="section">
+      <h2>System Overview</h2>
+      <p><b>CPU:</b> <span id="cpu-info">-</span></p>
+      <p><b>GPU:</b> <span id="gpu-info">-</span></p>
+      <p><b>RAM:</b> <span id="ram-info">-</span></p>
+      <p><b>CPU Usage:</b> <span id="cpu-usage">0%</span> | <b>RAM Usage:</b> <span id="ram-usage">0%</span></p>
+      <button id="backupBtn">Create Restore Point</button>
+      <button id="benchmarkBtn">Run Benchmark</button>
+      <button id="applyAllBtn">Apply All Recommended Tweaks</button>
+    </div>
+    
+    <!-- FPS Tweaks Section -->
+    <div id="section-fps" class="section" style="display:none;">
+      <h2>FPS Boost Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_multi_threaded_performance" data-tweak-id="multi_threaded_performance"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Multi-Threaded Performance</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_prefetch" data-tweak-id="disable_prefetch"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Prefetch</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_cpu_priority_for_high_tasks" data-tweak-id="set_cpu_priority"><span class="slider"></span></label>
+        <span class="toggle-label">Set CPU Priority for High Tasks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_background_apps" data-tweak-id="disable_background_apps"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Background Apps</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_fast_startup" data-tweak-id="disable_fast_startup"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Fast Startup</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hyperthreading" data-tweak-id="disable_hyperthreading"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Hyper-Threading</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_cstates" data-tweak-id="disable_cstates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable C-States</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_idle_states" data-tweak-id="disable_idle_states"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Idle States</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_ultimate_performance" data-tweak-id="ultimate_performance"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Ultimate Performance Plan</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hpet" data-tweak-id="disable_hpet"><span class="slider"></span></label>
+        <span class="toggle-label">Disable HPET (High Precision Event Timer)</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_scheduler" data-tweak-id="optimize_scheduler"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize Windows Scheduler</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_input_delay" data-tweak-id="reduce_input_delay"><span class="slider"></span></label>
+        <span class="toggle-label">Reduce Input Delay</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_game_mode" data-tweak-id="enable_game_mode"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Game Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_game_dvr" data-tweak-id="disable_game_dvr"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Game DVR</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_fast_startup" data-tweak-id="enable_fast_startup"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Fast Startup</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_sysmain"><span class="slider"></span></label>
+        <span class="toggle-label">Disable SysMain (Superfetch)</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_game_mode"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Game Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hdaudio"><span class="slider"></span></label>
+        <span class="toggle-label">Disable High Definition Audio</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_audio_enhancements"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Audio Enhancements</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_search_indexing"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Search Indexing</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_adjust_processor_scheduling"><span class="slider"></span></label>
+        <span class="toggle-label">Adjust Processor Scheduling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_defender_rt"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Defender Real-Time Protection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_cpu_priority_high"><span class="slider"></span></label>
+        <span class="toggle-label">Set CPU Priority to High</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_low_priority_io"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Low Priority I/O</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_cpu_affinity"><span class="slider"></span></label>
+        <span class="toggle-label">Set CPU Affinity for Gaming</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_prefetch_noncritical"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Prefetch for Non-Critical Apps</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hibernation"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Hibernation</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_adjust_virtual_memory"><span class="slider"></span></label>
+        <span class="toggle-label">Adjust Virtual Memory/Pagefile</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_core_parking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Core Parking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_dynamic_tick"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Dynamic Tick</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_max_processor_state"><span class="slider"></span></label>
+        <span class="toggle-label">Set Max Processor State to 100%</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_memory_compression"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Memory Compression</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_cpu_thread_priority"><span class="slider"></span></label>
+        <span class="toggle-label">Set CPU Thread Priority</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_adjust_cpu_priority"><span class="slider"></span></label>
+        <span class="toggle-label">Adjust CPU Priority for Gaming</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_system_responsiveness"><span class="slider"></span></label>
+        <span class="toggle-label">Set System Responsiveness to High</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_multithreaded"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Multi-Threaded Performance</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_prefetch"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Prefetch</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_cpu_priority_for_high_tasks"><span class="slider"></span></label>
+        <span class="toggle-label">Set CPU Priority for High Tasks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_background_apps"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Background Apps</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_fast_startup"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Fast Startup</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hyperthreading"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Hyper-Threading</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_cstates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable C-States</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_idle_states"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Idle States</span>
+      </div>
+    </div>
+
+    <!-- Visual Tweaks Section -->
+    <div id="section-visual" class="section" style="display:none;">
+      <h2>Visual Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_transparency" data-tweak-id="disable_transparency"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Transparency Effects</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_show_seconds_in_taskbar_clock" data-tweak-id="show_seconds_in_taskbar"><span class="slider"></span></label>
+        <span class="toggle-label">Show Seconds in Taskbar Clock</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggleAnimations" data-tweak-id="disable_animations"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Animations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggleTransparency" data-tweak-id="disable_transparency_effects"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Transparency Effects</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_transparency_effects"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Transparency Effects</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_show_file_extensions"><span class="slider"></span></label>
+        <span class="toggle-label">Show File Extensions</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_aero_snap"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Aero Snap</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_taskbar_transparency"><span class="slider"></span></label>
+        <span class="toggle-label">Set Taskbar Transparency</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_change_window_border_width"><span class="slider"></span></label>
+        <span class="toggle-label">Change Window Border Width</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_auto_hide_taskbar"><span class="slider"></span></label>
+        <span class="toggle-label">Auto-Hide Taskbar</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_remove_cortana_taskbar"><span class="slider"></span></label>
+        <span class="toggle-label">Remove Cortana from Taskbar</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_change_system_font"><span class="slider"></span></label>
+        <span class="toggle-label">Change System Font</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_explorer_animations"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Explorer Animations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_dark_mode_explorer"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Dark Mode in Explorer</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_screen_flicker"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Screen Flicker</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_change_mouse_cursor_speed"><span class="slider"></span></label>
+        <span class="toggle-label">Change Mouse Cursor Speed</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_snap_assist"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Snap Assist</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_dark_mode"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Dark Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_transparency"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Transparency</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_small_taskbar_icons"><span class="slider"></span></label>
+        <span class="toggle-label">Set Small Taskbar Icons</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_taskbar_grouping"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Taskbar Grouping</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_classic_context_menu"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Classic Context Menu</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_smooth_scrolling"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Smooth Scrolling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_menu_delay"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Menu Delay</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_animations"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Animations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_remove_taskbar_transparency"><span class="slider"></span></label>
+        <span class="toggle-label">Remove Taskbar Transparency</span>
+      </div>
+    </div>
+
+    <!-- Privacy Tweaks Section -->
+    <div id="section-privacy" class="section" style="display:none;">
+      <h2>Privacy Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_no_telemetry" data-tweak-id="disable_telemetry"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Telemetry / Data Collection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_no_cortana"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Cortana</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_no_ads"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Ads & Suggestions</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_no_bkgd_apps"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Background Apps</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_no_defender"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Defender</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_error_reporting"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Error Reporting</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_prevent_error_reports"><span class="slider"></span></label>
+        <span class="toggle-label">Prevent Error Reports</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_defender"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Defender</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_store_auto_updates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Store Auto-Updates</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_insider_updates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Insider Updates</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_cortana_completely"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Cortana Completely</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_ink"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Ink</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_feedback"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Feedback</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_app_error_reporting"><span class="slider"></span></label>
+        <span class="toggle-label">Disable App Error Reporting</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_smart_screen"><span class="slider"></span></label>
+        <span class="toggle-label">Disable SmartScreen</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_ad_id_tracking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Ad ID Tracking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_data_collection"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Data Collection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_location_services"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Location Services</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_store_app_updates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Store App Updates</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_location_tracking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Location Tracking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_telemetry"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Telemetry</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_prevent_cortana_data"><span class="slider"></span></label>
+        <span class="toggle-label">Prevent Cortana Data Collection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_cloud_app_data"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Cloud App Data Collection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_consumer_features"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Consumer Features</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_insider_data_collection"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Insider Data Collection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_all_telemetry"><span class="slider"></span></label>
+        <span class="toggle-label">Disable All Telemetry</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_error_reporting_service"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Error Reporting Service</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_uac"><span class="slider"></span></label>
+        <span class="toggle-label">Disable UAC</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_defender_cloud_protection"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Defender Cloud Protection</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_update"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Update</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_search_indexing"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Search Indexing</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_edge_tracking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Edge Tracking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_app_tracking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable App Tracking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_web_search"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Web Search</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_update_telemetry"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Update Telemetry</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_wi_fi_sense"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Wi-Fi Sense</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_error_reporting"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Error Reporting</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_search"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Search</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_automatic_app_updates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Automatic App Updates</span>
+      </div>
+    </div>
+
+    <!-- Network Tweaks Section -->
+    <div id="section-network" class="section" style="display:none;">
+      <h2>Network Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_nagle_algorithm" data-tweak-id="disable_nagle_algorithm"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Nagle's Algorithm</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_tcp_settings" data-tweak-id="optimize_tcp_settings"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize TCP Settings</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_flush_dns_cache" data-tweak-id="flush_dns_cache"><span class="slider"></span></label>
+        <span class="toggle-label">Flush DNS Cache</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_network_throttling" data-tweak-id="disable_network_throttling"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Network Throttling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_network_autotuning" data-tweak-id="disable_network_autotuning"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Network Auto-Tuning</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_ipv6" data-tweak-id="disable_ipv6"><span class="slider"></span></label>
+        <span class="toggle-label">Disable IPv6</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_max_connections" data-tweak-id="set_max_connections"><span class="slider"></span></label>
+        <span class="toggle-label">Set Max Connections</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_dns_caching" data-tweak-id="disable_dns_caching"><span class="slider"></span></label>
+        <span class="toggle-label">Disable DNS Caching</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_auto_tuning" data-tweak-id="disable_auto_tuning"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Auto-Tuning</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_bits" data-tweak-id="disable_bits"><span class="slider"></span></label>
+        <span class="toggle-label">Disable BITS</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_google_dns" data-tweak-id="set_google_dns"><span class="slider"></span></label>
+        <span class="toggle-label">Set Google DNS</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_jumbo_frame" data-tweak-id="enable_jumbo_frame"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Jumbo Frame</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_ipv6_completely" data-tweak-id="disable_ipv6_completely"><span class="slider"></span></label>
+        <span class="toggle-label">Disable IPv6 Completely</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_reset_tcp_ip_stack" data-tweak-id="reset_tcp_ip_stack"><span class="slider"></span></label>
+        <span class="toggle-label">Reset TCP/IP Stack</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_teredo" data-tweak-id="disable_teredo"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Teredo Tunneling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_mtu_for_internet" data-tweak-id="set_mtu_for_internet"><span class="slider"></span></label>
+        <span class="toggle-label">Set MTU for Faster Internet</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_tcp_optimizations" data-tweak-id="tcp_optimizations"><span class="slider"></span></label>
+        <span class="toggle-label">TCP Optimizations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_tcp_ip" data-tweak-id="optimize_tcp_ip"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize TCP/IP Settings</span>
+      </div>
+    </div>
+
+    <!-- Power Tweaks Section -->
+    <div id="section-power" class="section" style="display:none;">
+      <h2>Power Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_ultimate_performance" data-tweak-id="ultimate_performance"><span class="slider"></span></label>
+        <span class="toggle-label">Apply Ultimate Power Plan</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_cpu_performance"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize CPU Performance</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_max_performance_powerplan"><span class="slider"></span></label>
+        <span class="toggle-label">Set Max Performance Power Plan</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hybrid_sleep"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Hybrid Sleep</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_system_cooling"><span class="slider"></span></label>
+        <span class="toggle-label">Disable System Cooling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_set_high_perf_graphics"><span class="slider"></span></label>
+        <span class="toggle-label">Set High-Perf Graphics</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_sleep_mode"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Sleep Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_pcie_power_management"><span class="slider"></span></label>
+        <span class="toggle-label">Disable PCIe Power Management</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_apply_cpu_power_optimizations"><span class="slider"></span></label>
+        <span class="toggle-label">Apply CPU Power Optimizations</span>
+      </div>
+    </div>
+
+    <!-- RAM Tweaks Section -->
+    <div id="section-ram" class="section" style="display:none;">
+      <h2>RAM Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_ram_4gb"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize for 4GB RAM</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_ram_8gb"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize for 8GB RAM</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_ram_16gb"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize for 16GB RAM</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_ram_32gb"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize for 32GB RAM</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_ram_compression"><span class="slider"></span></label>
+        <span class="toggle-label">Disable RAM Compression</span>
+      </div>
+    </div>
+
+    <!-- Gaming Tweaks Section -->
+    <div id="section-gaming" class="section" style="display:none;">
+      <h2>Gaming Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_bkgd_apps_gaming"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Background Apps for Gaming</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_cpu_gaming"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize CPU for Gaming</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_game_mode"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Game Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_game_dvr"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Game DVR</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_disk_gaming"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize Disk for Gaming</span>
+      </div>
+    </div>
+
+    <!-- Miscellaneous Tweaks Section -->
+    <div id="section-misc" class="section" style="display:none;">
+      <h2>Miscellaneous Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_app_vulnerability"><span class="slider"></span></label>
+        <span class="toggle-label">Disable App Vulnerability Scanning</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_sys_restore"><span class="slider"></span></label>
+        <span class="toggle-label">Disable System Restore</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_throttle"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Throttling</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_fast_startup"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Fast Startup</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_unnecessary_services"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Unnecessary Services</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_clean_temp_files"><span class="slider"></span></label>
+        <span class="toggle-label">Clean Temp Files</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_remove_windows_bloatware"><span class="slider"></span></label>
+        <span class="toggle-label">Remove Windows Bloatware</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_clear_system_cache"><span class="slider"></span></label>
+        <span class="toggle-label">Clear System Cache</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_startup_services"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Startup Services</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_windows_update_telemetry"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Windows Update Telemetry</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_virtualization"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Virtualization</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_fastboot"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Fast Boot</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_security_software"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Security Software (Advanced)</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_remove_unwanted_apps"><span class="slider"></span></label>
+        <span class="toggle-label">Remove Unwanted Apps</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_clean_system_temp_files"><span class="slider"></span></label>
+        <span class="toggle-label">Clean System Temp Files</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_apply_boosted_plan_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Apply Boosted Plan Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_apply_security_optimizations"><span class="slider"></span></label>
+        <span class="toggle-label">Apply Security Optimizations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_background_services"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Background Services</span>
+      </div>
+    </div>
+
+    <!-- Recommended Tweaks Section -->
+    <div id="section-recommended" class="section" style="display:none;">
+      <h2>Recommended Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_updater_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Windows Update Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_system_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Enable System Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_performance_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Performance Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_privacy_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Privacy Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_gaming_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Gaming Tweaks</span>
+      </div>
+    </div>
+
+    <!-- Software Installation Section -->
+    <div id="section-software" class="section" style="display:none;">
+      <h2>Software Installation</h2>
+      <p>Click to install (requires internet):</p>
+      <ul class="soft-list">
+        <li><button onclick="installSoft('Malwarebytes')">Install Malwarebytes</button></li>
+        <li><button onclick="installSoft('ADWCleaner')">Install ADWCleaner</button></li>
+        <li><button onclick="installSoft('NVcleanstall')">Install NVCleanstall</button></li>
+        <li><button onclick="installSoft('Nvidia Profile Inspector')">Install Nvidia Profile Inspector</button></li>
+        <li><button onclick="installSoft('WinRAR')">Install WinRAR</button></li>
+        <li><button onclick="installSoft('ParkControl')">Install ParkControl</button></li>
+        <li><button onclick="installSoft('Process Lasso')">Install Process Lasso</button></li>
+        <li><button onclick="installSoft('Google Chrome')">Install Google Chrome</button></li>
+        <li><button onclick="installSoft('Steam')">Install Steam</button></li>
+        <li><button onclick="installSoft('Epic Games')">Install Epic Games</button></li>
+        <li><button onclick="installSoft('Nvidia App')">Install Nvidia App</button></li>
+        <li><button onclick="installSoft('AMD Software')">Install AMD Software</button></li>
+        <li><button onclick="installSoft('DDU Uninstaller')">Install DDU Uninstaller</button></li>
+        <li><button onclick="installSoft('Battle.net')">Install Battle.net</button></li>
+        <li><button onclick="installSoft('Roblox')">Install Roblox</button></li>
+        <li><button onclick="installSoft('Ubisoft Connect')">Install Ubisoft Connect</button></li>
+        <li><button onclick="installSoft('GOG Galaxy')">Install GOG Galaxy</button></li>
+        <li><button onclick="installSoft('Origin')">Install Origin</button></li>
+        <li><button onclick="installSoft('Discord')">Install Discord</button></li>
+        <li><button onclick="installSoft('Wargaming.net')">Install Wargaming.net</button></li>
+      </ul>
+    </div>
+
+    <!-- Tweak Tools Section -->
+    <div id="section-tweak-tools" class="section" style="display:none;">
+      <h2>Tweak Tools</h2>
+      <div class="tool-group">
+        <h3>Configuration Management</h3>
+        <div class="tool-item">
+          <button id="saveConfigBtn" class="tool-btn"><i class="fas fa-save"></i> Save Configuration</button>
+          <p>Save your current tweak settings to a file</p>
+        </div>
+        <div class="tool-item">
+          <div class="file-upload-wrapper">
+            <input type="file" id="configFileInput" accept=".json">
+            <button id="loadConfigBtn" class="tool-btn"><i class="fas fa-upload"></i> Load Configuration</button>
+          </div>
+          <p>Load tweak settings from a saved file</p>
+        </div>
+        <div class="tool-item">
+          <button id="resetConfigBtn" class="tool-btn"><i class="fas fa-undo"></i> Reset All Settings</button>
+          <p>Reset all tweaks to default values</p>
+        </div>
+      </div>
+      
+      <div class="tool-group">
+        <h3>System Tools</h3>
+        <div class="tool-item">
+          <button id="createRestorePointBtn" class="tool-btn"><i class="fas fa-bookmark"></i> Create Restore Point</button>
+          <p>Create a system restore point before making changes</p>
+        </div>
+        <div class="tool-item">
+          <button id="runSystemBenchmarkBtn" class="tool-btn"><i class="fas fa-tachometer-alt"></i> Run System Benchmark</button>
+          <p>Benchmark your system performance</p>
+        </div>
+      </div>
+      
+      <div class="tool-group">
+        <h3>Quick Actions</h3>
+        <div class="tool-item">
+          <button id="optimizeNetworkBtn" class="tool-btn"><i class="fas fa-network-wired"></i> Optimize Network</button>
+          <p>Apply all recommended network optimizations</p>
+        </div>
+        <div class="tool-item">
+          <button id="optimizeGamingBtn" class="tool-btn"><i class="fas fa-gamepad"></i> Optimize for Gaming</button>
+          <p>Apply gaming-focused optimizations</p>
+        </div>
+        <div class="tool-item">
+          <button id="optimizePrivacyBtn" class="tool-btn"><i class="fas fa-shield-alt"></i> Optimize Privacy</button>
+          <p>Apply privacy-focused optimizations</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Tweaks Section -->
+    <div id="section-advanced" class="section" style="display:none;">
+      <h2>Advanced Tweaks</h2>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_core_parking"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Core Parking</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_dynamic_tick"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Dynamic Tick</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_cpu_performance"><span class="slider"></span></label>
+        <span class="toggle-label">Enable CPU Performance Mode</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_prefetch"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Prefetch</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_optimize_ram"><span class="slider"></span></label>
+        <span class="toggle-label">Optimize RAM for Performance</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_virtualization"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Virtualization</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_fastboot"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Fast Boot</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_security_software"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Security Software (Advanced)</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_apply_advanced_network_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Apply Advanced Network Tweaks</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_telemetry_tweaks"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Telemetry</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_apply_cpu_power_optimizations"><span class="slider"></span></label>
+        <span class="toggle-label">Apply CPU Power Optimizations</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_enable_virtual_memory"><span class="slider"></span></label>
+        <span class="toggle-label">Enable Virtual Memory (Pagefile)</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_hyperthreading"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Hyper-Threading</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_cstates"><span class="slider"></span></label>
+        <span class="toggle-label">Disable C-States</span>
+      </div>
+      <div class="toggle-item">
+        <label class="switch"><input type="checkbox" id="toggle_disable_idle_states"><span class="slider"></span></label>
+        <span class="toggle-label">Disable Idle States</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FontAwesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

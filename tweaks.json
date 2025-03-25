@@ -1,0 +1,74 @@
+{
+  "tweaks": [
+    {
+      "id": "disable_telemetry",
+      "name": "Disable Windows Telemetry",
+      "command": "reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection\" /v AllowTelemetry /t REG_DWORD /d 0 /f",
+      "category": "privacy",
+      "description": "Prevents Windows from collecting usage data"
+    },
+    {
+      "id": "ultimate_performance",
+      "name": "Enable Ultimate Performance Plan",
+      "command": "powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61",
+      "category": "performance",
+      "description": "Activates Windows ultimate performance power plan"
+    },
+    {
+      "id": "disable_game_bar",
+      "name": "Disable Game Bar",
+      "command": "reg add \"HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\GameDVR\" /v AppCaptureEnabled /t REG_DWORD /d 0 /f",
+      "category": "gaming",
+      "description": "Turns off Windows Game Bar for better performance"
+    },
+    {
+      "id": "disable_visual_effects",
+      "name": "Disable Visual Effects",
+      "command": "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects\" /v VisualFXSetting /t REG_DWORD /d 2 /f",
+      "category": "performance",
+      "description": "Disables visual effects for better performance"
+    },
+    {
+      "id": "disable_defender",
+      "name": "Disable Windows Defender",
+      "command": "reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\" /v DisableAntiSpyware /t REG_DWORD /d 1 /f",
+      "category": "security",
+      "description": "Disables Windows Defender (use with caution)"
+    },
+    {
+      "id": "clear_temp_files",
+      "name": "Clean Temporary Files",
+      "command": "powershell.exe -Command \"Remove-Item -Path $env:TEMP\\* -Recurse -Force -ErrorAction SilentlyContinue\"",
+      "category": "maintenance",
+      "description": "Removes temporary files to free up disk space"
+    },
+    {
+      "id": "disable_cortana",
+      "name": "Disable Cortana",
+      "command": "reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search\" /v AllowCortana /t REG_DWORD /d 0 /f",
+      "category": "privacy",
+      "description": "Disables Cortana assistant"
+    },
+    {
+      "id": "disable_updates",
+      "name": "Disable Windows Updates",
+      "command": "reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f",
+      "category": "system",
+      "description": "Prevents automatic Windows updates"
+    },
+    {
+      "id": "optimize_network",
+      "name": "Optimize Network Settings",
+      "command": "netsh int tcp set global autotuninglevel=normal",
+      "category": "network",
+      "description": "Adjusts TCP settings for better network performance"
+    },
+    {
+      "id": "clear_dns_cache",
+      "name": "Clear DNS Cache",
+      "command": "ipconfig /flushdns",
+      "category": "network",
+      "description": "Flushes DNS resolver cache"
+    }
+  ]
+}

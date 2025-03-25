@@ -1,0 +1,21 @@
+{
+  "keys": {
+    "ABC-123-XYZ": {
+      "type": "30",
+      "boundUser": null,
+      "boundHWID": null,
+      "activationDate": null
+    },
+    "FOO-BAR-222": {
+      "type": "60",
+      "boundUser": null,
+      "boundHWID": null,
+      "activationDate": null
+    },
+    "B5BE8D3C667542B94B7738851B581E": {
+      "type": "lifetime",
+      "boundUser": null,
+      "boundHWID": null
+    }
+  }
+}
